@@ -3,6 +3,7 @@
 """Wrapper to train and test a video classification model."""
 from timesformer.utils.misc import launch_job
 from timesformer.utils.parser import load_config, parse_args
+from timesformer.visualization.tensorboard_vis import TensorboardWriter as visualize
 
 from tools.test_net import test
 from tools.train_net import train

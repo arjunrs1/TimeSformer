@@ -3,9 +3,11 @@
 """Helper functions for multigrid training."""
 
 import numpy as np
-from torch._six import int_classes as _int_classes
 from torch.utils.data.sampler import Sampler
 
+#for pytorch >=1.9, switched torch._six import int_classes to this 
+int_classes = int
+_int_classes = int_classes
 
 class ShortCycleBatchSampler(Sampler):
     """
