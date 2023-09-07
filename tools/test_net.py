@@ -128,13 +128,13 @@ def perform_test(test_loader, model, test_meter, cfg, writer=None):
             save_path = os.path.join(cfg.OUTPUT_DIR, cfg.TEST.SAVE_RESULTS_PATH)
 
             with PathManager.open(save_path, "wb") as f:
-                pickle.dump([all_labels, all_labels], f)
+                pickle.dump([all_labels, all_preds], f)
 
             logger.info(
                 "Successfully saved prediction results to {}".format(save_path)
             )
 
-    test_meter.finalize_metrics()
+    test_meter.finalize_metrics(ks=(1, 4))
     return test_meter
 
 
@@ -168,6 +168,8 @@ def test(cfg):
     # Create video testing loaders.
     test_loader = loader.construct_loader(cfg, "test")
     logger.info("Testing model for {} iterations".format(len(test_loader)))
+    print("num classes:")
+    print(cfg.MODEL.NUM_CLASSES)
 
     assert (
         len(test_loader.dataset)

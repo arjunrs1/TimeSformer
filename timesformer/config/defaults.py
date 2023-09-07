@@ -285,6 +285,9 @@ _C.DATA.PATH_LABEL_SEPARATOR = " "
 # Video path prefix if any.
 _C.DATA.PATH_PREFIX = ""
 
+# Camera view (for EgoExo specifically).
+_C.DATA.CAMERA_VIEW = "ego"
+
 # The spatial crop size of the input clip.
 _C.DATA.CROP_SIZE = 224
 
