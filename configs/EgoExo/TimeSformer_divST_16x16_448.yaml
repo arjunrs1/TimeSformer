@@ -2,14 +2,16 @@ TRAIN:
   ENABLE: True
   DATASET: EgoExo
   BATCH_SIZE: 8
-  EVAL_PERIOD: 5
-  CHECKPOINT_PERIOD: 5
-  AUTO_RESUME: True
+  EVAL_PERIOD: 1
+  CHECKPOINT_PERIOD: 1
+  AUTO_RESUME: True 
+  CHECKPOINT_FILE_PATH: /vision/asomaya1/ego_exo/ProficiencyEstimation/TimeSformer/pretrained_ckpts/model_best.pth
+  FINETUNE: True
 DATA:
-  PATH_TO_DATA_DIR: /vision/asomaya1/ego_exo/ProficiencyEstimation/TimeSformer/ego_exo_splits/448p
+  PATH_TO_DATA_DIR: /vision/asomaya1/ego_exo/ProficiencyEstimation/TimeSformer/ego_exo_splits/448pFull
   CAMERA_VIEW: "ego"
   PATH_PREFIX: /vision/asomaya1/ego_exo/data
-  NUM_FRAMES: 16
+  NUM_FRAMES: 8
   SAMPLING_RATE: 16
   TRAIN_JITTER_SCALES: [448, 512]
   TRAIN_CROP_SIZE: 448
@@ -21,7 +23,6 @@ TENSORBOARD:
     ENABLE: True
     GRAD_CAM:
       ENABLE: True
-      LAYER_LIST: ['potato']
       USE_TRUE_LABEL: True
 TIMESFORMER:
   ATTENTION_TYPE: 'divided_space_time'
@@ -30,7 +31,7 @@ SOLVER:
   LR_POLICY: steps_with_relative_lrs
   STEPS: [0, 11, 14]
   LRS: [1, 0.1, 0.01]
-  MAX_EPOCH: 15
+  MAX_EPOCH: 150
   MOMENTUM: 0.9
   WEIGHT_DECAY: 1e-4
   OPTIMIZING_METHOD: sgd
@@ -43,11 +44,11 @@ MODEL:
 TEST:
   ENABLE: True
   DATASET: EgoExo
-  BATCH_SIZE: 8
-  NUM_ENSEMBLE_VIEWS: 3
+  BATCH_SIZE: 32
+  NUM_ENSEMBLE_VIEWS: 10
   NUM_SPATIAL_CROPS: 3
 DATA_LOADER:
-  NUM_WORKERS: 8
+  NUM_WORKERS: 2
   PIN_MEMORY: True
 NUM_GPUS: 8
 NUM_SHARDS: 1

@@ -299,6 +299,18 @@ def load_checkpoint(
         # Load the checkpoint on CPU to avoid GPU mem spike.
         with PathManager.open(path_to_checkpoint, "rb") as f:
             checkpoint = torch.load(f, map_location="cpu")
+            if 'state_dict' in checkpoint.keys():
+                # Process the checkpoint for video_model parameters
+                pre_train_dict = checkpoint["state_dict"]
+                processed_pre_train_dict = {}
+                for key, value in pre_train_dict.items():
+                    if key.startswith("module.video_model."):
+                        # Replace 'module.video_model.' with 'model.'
+                        new_key = 'model' + key[len('module.video_model'):]
+                        processed_pre_train_dict[new_key] = value
+
+                # Use the processed dictionary for loading
+                checkpoint['model_state'] = processed_pre_train_dict
         try:
 #        if True:
             model_state_dict_3d = (
