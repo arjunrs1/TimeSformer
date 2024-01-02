@@ -5,8 +5,8 @@ TRAIN:
   EVAL_PERIOD: 1
   CHECKPOINT_PERIOD: 1
   AUTO_RESUME: True 
-  CHECKPOINT_FILE_PATH: /vision/asomaya1/ego_exo/ProficiencyEstimation/TimeSformer/pretrained_ckpts/model_best.pth
-  FINETUNE: True
+  #CHECKPOINT_FILE_PATH: /vision/asomaya1/ego_exo/ProficiencyEstimation/TimeSformer/pretrained_ckpts/model_best.pth
+  FINETUNE: False #True
 DATA:
   PATH_TO_DATA_DIR: /vision/asomaya1/ego_exo/ProficiencyEstimation/TimeSformer/ego_exo_splits/448pFull
   CAMERA_VIEW: "ego"
