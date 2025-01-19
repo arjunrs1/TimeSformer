@@ -141,3 +141,9 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+
+
+#Outputs and pretrained ckpt files
+outputs/
+pretrained_ckpts/
