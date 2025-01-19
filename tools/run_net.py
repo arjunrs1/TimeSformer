@@ -7,12 +7,14 @@ from timesformer.visualization.tensorboard_vis import TensorboardWriter as visua
 
 from tools.test_net import test
 from tools.train_net import train
+from tools.val_net import val
 
 
 def get_func(cfg):
     train_func = train
     test_func = test
-    return train_func, test_func
+    val_func = val
+    return train_func, val_func, test_func
 
 def main():
     """
@@ -23,14 +25,16 @@ def main():
        args.output_dir = str(args.job_dir)
     cfg = load_config(args)
 
-    train, test = get_func(cfg)
+    train, val, test = get_func(cfg)
 
     # Perform training.
     if cfg.TRAIN.ENABLE:
         launch_job(cfg=cfg, init_method=args.init_method, func=train)
 
     # Perform multi-clip testing.
-    if cfg.TEST.ENABLE:
+    if cfg.VAL.ENABLE and cfg.TEST.ENABLE:
+        launch_job(cfg=cfg, init_method=args.init_method, func=val)
+    elif cfg.TEST.ENABLE:
         launch_job(cfg=cfg, init_method=args.init_method, func=test)
 
     # Perform model visualization.

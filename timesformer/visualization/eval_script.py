@@ -87,12 +87,12 @@ def evaluate_performance_by_scenario(gt_annotations, model_predictions, scenario
 
     return {scenario: (info['correct'] / info['total']) if info['total'] else 0 for scenario, info in scenario_accuracies.items()}
 
-def evaluate(gt_file, pred_file):
+def evaluate(test_annotation_file, user_annotation_file):
     print("Starting Evaluation.....")
 
-    with open(gt_file, "r") as fp:
+    with open(test_annotation_file, "r") as fp:
         gt_annotations = json.load(fp)
-    with open(pred_file, "r") as fp:
+    with open(user_annotation_file, "r") as fp:
         model_predictions = json.load(fp)
 
     # Validate model predictions:
@@ -117,9 +117,9 @@ def evaluate(gt_file, pred_file):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--gt-file", required=True, type=str)
-    parser.add_argument("--pred-file", required=True, type=str)
+    parser.add_argument("--test-annotation-file", required=True, type=str)
+    parser.add_argument("--user-annotation-file", required=True, type=str)
 
     args = parser.parse_args()
 
-    evaluate(args.gt_file, args.pred_file)
+    evaluate(args.test_annotation_file, args.user_annotation_file)

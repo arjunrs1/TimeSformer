@@ -103,6 +103,15 @@ _C.TEST.NUM_SPATIAL_CROPS = 3
 _C.TEST.CHECKPOINT_TYPE = "pytorch"
 # Path to saving prediction results file.
 _C.TEST.SAVE_RESULTS_PATH = ""
+
+# -----------------------------------------------------------------------------
+# Validation options
+# -----------------------------------------------------------------------------
+_C.VAL = CfgNode()
+
+# If True validate the model, else skip the validation.
+_C.VAL.ENABLE = False
+
 # -----------------------------------------------------------------------------
 # ResNet options
 # -----------------------------------------------------------------------------
@@ -338,6 +347,9 @@ _C.DATA.ENSEMBLE_METHOD = "sum"
 
 # If True, revert the default input channel (RBG <-> BGR).
 _C.DATA.REVERSE_INPUT_CHANNEL = False
+
+# Which version of EgoExo4D release to use (v1 or v2 release)
+_C.DATA.EGO_EXO_VERSION = "v1"
 
 ############
 _C.DATA.TEMPORAL_EXTENT = 8

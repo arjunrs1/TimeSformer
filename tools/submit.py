@@ -88,14 +88,17 @@ def launch(shard_id, num_shards, cfg, init_method):
         shard_id, num_shards, cfg
     ])
 
-    train, test = get_func(cfg)
+    train, val, test = get_func(cfg)
     # Launch job.
     if cfg.TRAIN.ENABLE:
         launch_job(cfg=cfg, init_method=init_method, func=train)
 
-    if cfg.TEST.ENABLE:
+    if cfg.VAL.ENABLE and cfg.TEST.ENABLE:
+        launch_job(cfg=cfg, init_method=init_method, func=val)
+    elif cfg.TEST.ENABLE:
         launch_job(cfg=cfg, init_method=init_method, func=test)
 
+    
 
 class Trainer(object):
     def __init__(self, args):

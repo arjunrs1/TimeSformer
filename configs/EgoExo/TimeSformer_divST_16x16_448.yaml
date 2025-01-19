@@ -4,9 +4,9 @@ TRAIN:
   BATCH_SIZE: 8
   EVAL_PERIOD: 1
   CHECKPOINT_PERIOD: 1
-  AUTO_RESUME: True 
-  #CHECKPOINT_FILE_PATH: /vision/asomaya1/ego_exo/ProficiencyEstimation/TimeSformer/pretrained_ckpts/model_best.pth
-  FINETUNE: False #True
+  AUTO_RESUME: True
+  CHECKPOINT_FILE_PATH: /vision/asomaya1/ego_exo/ProficiencyEstimation/TimeSformer/pretrained_ckpts/ego_vlpv2.pth
+  FINETUNE: True #If using pretrained_checkpoint for Kinetics, HowTo100M, EgoVLP or EgoVLPv2, set to True
 DATA:
   PATH_TO_DATA_DIR: /vision/asomaya1/ego_exo/ProficiencyEstimation/TimeSformer/ego_exo_splits/448pFull
   CAMERA_VIEW: "ego"
@@ -17,6 +17,7 @@ DATA:
   TRAIN_CROP_SIZE: 448
   TEST_CROP_SIZE: 448
   INPUT_CHANNEL_NUM: [3]
+  EGO_EXO_VERSION: 'v1' #options: v1, v2
 TENSORBOARD:
   ENABLE: True
   MODEL_VIS:
@@ -31,7 +32,7 @@ SOLVER:
   LR_POLICY: steps_with_relative_lrs
   STEPS: [0, 11, 14]
   LRS: [1, 0.1, 0.01]
-  MAX_EPOCH: 150
+  MAX_EPOCH: 20
   MOMENTUM: 0.9
   WEIGHT_DECAY: 1e-4
   OPTIMIZING_METHOD: sgd

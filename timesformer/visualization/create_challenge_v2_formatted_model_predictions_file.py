@@ -12,10 +12,12 @@ is_v2 = True if "24" in test_annotations_file else False
 is_val = True if "val" in test_annotations_file else False
 
 mode = "448pFull"
+trained_on_v2 = True
 kinetics_pretrain_path = "_K400_pretrain"
 vlp_pretrain_path = "_vlp_pretrain"
 vlpv2_pretrain_path = "_vlpv2_pretrain"
 how_to_100m_pretrain_path = "_kinetics_pretrain" #NOTE: Not a typo, original was labeled incorrectly as kinetics
+trained_on_v2_extension = "_v2_train"
 #ONLY ONE OF THE BELOW PRE_TRAIN OPTIONS CAN BE TRUE!!
 use_kinetics_pretrain = False
 use_vlp_pretrain = False
@@ -25,7 +27,8 @@ use_how_to_100m_pretrain = False
 preds_file_name = "preds"
 if is_v2:
     mode += "_v2"
-    preds_file_name += "_v2"
+    if not trained_on_v2:
+        preds_file_name += "_v2"
 if is_val:
     preds_file_name = "val_" + preds_file_name
 
@@ -58,6 +61,8 @@ for view in camera_views:
         view += vlpv2_pretrain_path
     elif use_how_to_100m_pretrain:
         view += how_to_100m_pretrain_path
+    if trained_on_v2:
+        view += trained_on_v2_extension
     trunc_mode = "448pFull" if is_v2 else mode
     with open(os.path.join(path_prefix, trunc_mode, view, preds_file_name + ".pkl"), "rb") as f:
         data = pickle.load(f)
@@ -76,18 +81,24 @@ for view in camera_views:
     elif original_view == 'exo_all':
         exo_preds = concat_preds
 
-ego_preds_formatted = [ego_preds.squeeze(0)[i].numpy().tolist() for i in range(ego_preds.squeeze(0).shape[0])]
-exo_preds_formatted = [exo_preds[:, i, :].numpy().tolist() for i in range(exo_preds.shape[1])]
+softmax_preds = torch.nn.functional.softmax(torch.concat((ego_preds, exo_preds),axis=0), dim=-1)
+ensemble_preds = torch.mean(softmax_preds, dim=0)
+pred_idxs = np.array(torch.argmax(ensemble_preds, dim=1))
+
+pred_idxs = [int(idx) for idx in pred_idxs]
+#ego_preds_formatted = [ego_preds.squeeze(0)[i].numpy().tolist() for i in range(ego_preds.squeeze(0).shape[0])]
+#exo_preds_formatted = [exo_preds[:, i, :].numpy().tolist() for i in range(exo_preds.shape[1])]
 
 result = {
     "videos": list(video_ids),
-    "ego_model_predictions": list(ego_preds_formatted),
-    "exo_model_predictions": list(exo_preds_formatted)
+    "predictions": list(pred_idxs),
 }
 
-output_file_path = "model_predictions"
+output_file_path = "model_predictions_challenge"
 if is_v2:
     output_file_path +=  "_v2"
+if trained_on_v2:
+    output_file_path += trained_on_v2_extension
 output_file_path += ".json"
 with open(output_file_path, 'w') as file:
     json.dump(result, file)

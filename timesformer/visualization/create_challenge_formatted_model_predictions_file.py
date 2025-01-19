@@ -76,16 +76,20 @@ for view in camera_views:
     elif original_view == 'exo_all':
         exo_preds = concat_preds
 
-ego_preds_formatted = [ego_preds.squeeze(0)[i].numpy().tolist() for i in range(ego_preds.squeeze(0).shape[0])]
-exo_preds_formatted = [exo_preds[:, i, :].numpy().tolist() for i in range(exo_preds.shape[1])]
+softmax_preds = torch.nn.functional.softmax(torch.concat((ego_preds, exo_preds),axis=0), dim=-1)
+ensemble_preds = torch.mean(softmax_preds, dim=0)
+pred_idxs = np.array(torch.argmax(ensemble_preds, dim=1))
+
+pred_idxs = [int(idx) for idx in pred_idxs]
+#ego_preds_formatted = [ego_preds.squeeze(0)[i].numpy().tolist() for i in range(ego_preds.squeeze(0).shape[0])]
+#exo_preds_formatted = [exo_preds[:, i, :].numpy().tolist() for i in range(exo_preds.shape[1])]
 
 result = {
     "videos": list(video_ids),
-    "ego_model_predictions": list(ego_preds_formatted),
-    "exo_model_predictions": list(exo_preds_formatted)
+    "predictions": list(pred_idxs),
 }
 
-output_file_path = "model_predictions"
+output_file_path = "model_predictions_challenge"
 if is_v2:
     output_file_path +=  "_v2"
 output_file_path += ".json"

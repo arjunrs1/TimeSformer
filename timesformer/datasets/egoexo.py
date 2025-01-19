@@ -75,9 +75,14 @@ class Egoexo(torch.utils.data.Dataset):
         """
         Construct the video loader.
         """
-        path_to_file = os.path.join(
-            self.cfg.DATA.PATH_TO_DATA_DIR, self.cfg.DATA.CAMERA_VIEW, "{}.csv".format(self.mode)
-        )
+        if self.cfg.DATA.EGO_EXO_VERSION != "v1":
+            path_to_file = os.path.join(
+                self.cfg.DATA.PATH_TO_DATA_DIR + "_" + self.cfg.DATA.EGO_EXO_VERSION, self.cfg.DATA.CAMERA_VIEW, "{}.csv".format(self.mode)
+            )
+        else:
+            path_to_file = os.path.join(
+                self.cfg.DATA.PATH_TO_DATA_DIR, self.cfg.DATA.CAMERA_VIEW, "{}.csv".format(self.mode)
+            )
         assert PathManager.exists(path_to_file), "{} dir not found".format(
             path_to_file
         )
